@@ -1,0 +1,49 @@
+// Copyright 2015 gRPC authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package proto;
+
+
+message KeyPlayerId {
+	fixed64 key = 1;
+}
+
+message KeyString {
+	string key = 1;
+}
+
+message AccountData {
+	string account = 1;
+	string email = 2;
+	string mobile = 3;
+	string id_number = 4;
+	string id_name = 5;
+}
+
+// 账号数据
+message DbAccountData {
+	fixed64 player_id = 1;
+	AccountData account = 2;
+	string password = 3;
+	int64 signup_time = 4;
+	
+}
+
+// 防沉迷
+message IDCardInfo {
+	string id = 1;	// 身份证ID
+	string name = 2;// 身份证上的姓名(utf8)
+}

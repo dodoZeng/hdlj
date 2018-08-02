@@ -1,0 +1,18 @@
+{
+  "services": [
+		{
+		    "id": "hdlj.account.test1",
+		    "name": "hdlj.account.test1",
+		    "tags": ["hdlj.account.cluster"],
+		    "address": "localhost",
+		    "port": 50001,
+		    "checks": [
+		        {
+					"http": "http://localhost:50001/check",
+					"interval": "10s",
+					"timeout": "5s"
+		        }
+		    ]
+		}
+	]
+}

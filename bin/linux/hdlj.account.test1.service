@@ -1,0 +1,26 @@
+[Unit]
+Description=hdlj.account.test1.service
+After=network.target redis consul roisoft.account.db.0 roisoft.master hdlj.master.test1
+Wants=redis consul roisoft.account.db.0 roisoft.master hdlj.master.test1
+Conflicts=redis consul
+
+[Service]
+User=roisoft
+Group=roisoft
+
+Type=simple
+#EnvironmentFile=/usr/local/bin/hdlj/account_server.cfg
+ExecStart=/usr/local/bin/hdlj/account_server
+ExecReload=/bin/kill -TERM $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=5
+PIDFile=/var/run/hdlj.account.test1.pid
+#PrivateTmp=true
+
+LimitCORE=infinity
+LimitNOFILE=102400
+LimitNPROC=102400
+
+[Install]
+WantedBy=multi-user.target

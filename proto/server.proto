@@ -1,0 +1,68 @@
+// Copyright 2015 gRPC authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+import "common.proto";
+import "db_roisoft_acct.proto";
+import "db_hdlj.proto";
+
+package proto;
+
+
+// Master提供的服务
+service MasterService {
+  rpc GetNewPlayerId (VoidRequest) returns (KeyPlayerId) {}
+  rpc Signin (SessionRequest) returns (SessionReply) {}
+  rpc CheckSession (SessionRequest) returns (SessionReply) {}
+  rpc Offline (SessionRequest) returns (VoidReply) {}
+  rpc SyncLoadInfo (LoadInfo) returns (VoidReply) {}
+  rpc GetGameServerList (SessionInfo) returns (GameServerList) {}
+}
+
+message SessionRequest {
+  fixed64 player_id = 1;	// 玩家ID
+  string session_id = 2;	// 会话ID
+  string game_server_id = 3;// 游戏服ID
+  bool reallocate_agent = 4;// 是否重新分配Agent
+}
+
+message SessionReply {
+  ErrorInfo result = 1;
+  string session_id = 2;			// 会话ID
+  string agent_id = 3;				// 接入服务器ID
+  string agent_addr = 4;			// 接入服务器地址
+  string last_game_server_id = 5;	// 上次游戏服ID
+}
+
+message LoadInfo {
+  string node_id = 1;
+  int32  load = 2;
+}
+
+// Redis专用
+message RSessionInfo {
+  string session_id = 1;	// 会话
+  sfixed64 expiration = 2;	// 会话到期时间
+  string last_agent_id = 3;		// 最近一次agentID
+  string last_agent_addr = 4;	// 最近一次agent地址
+  string last_game_server_id = 5;// 最近一次游戏服ID
+  bool online = 6;          // 是否在线
+}
+
+message RGameDataInfo {
+  DbGameData data = 1;
+  bool is_db_saved = 2;
+}
+

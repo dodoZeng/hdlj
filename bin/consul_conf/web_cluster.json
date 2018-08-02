@@ -1,0 +1,18 @@
+{
+  "services": [
+		{
+		    "id": "hdlj.web.captcha.test1",
+		    "name": "hdlj.web.captcha.test1",
+		    "tags": ["hdlj.web.captcha.cluster"],
+		    "address": "localhost",
+		    "port": 8080,
+		    "checks": [
+		        {
+					"http": "http://localhost:8080/check",
+					"interval": "10s",
+					"timeout": "5s"
+		        }
+		    ]
+		}
+	]
+}

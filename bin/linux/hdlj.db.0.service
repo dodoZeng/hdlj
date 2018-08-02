@@ -1,0 +1,24 @@
+[Unit]
+Description=hdlj.db.0.service
+After=network.target
+
+[Service]
+User=roisoft
+Group=roisoft
+
+Type=simple
+#EnvironmentFile=/usr/local/bin/hdlj/db_server.cfg
+ExecStart=/usr/local/bin/hdlj/db_server -node_id=hdlj.db.0 -node_port=40000 -db_dir=/home/roisoft/hdlj.db
+ExecReload=/bin/kill -TERM $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=5
+PIDFile=/var/run/hdlj.db.0.pid
+#PrivateTmp=true
+
+LimitCORE=infinity
+LimitNOFILE=102400
+LimitNPROC=102400
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,18 @@
+{
+  "services": [
+		{
+		    "id": "hdlj.master.test.redis",
+		    "name": "hdlj.master.test.redis",
+		    "tags": ["hdlj.redis.cluster"],
+		    "address": "localhost",
+		    "port": 6379,
+		    "checks": [
+		        {
+					"Tcp": "localhost:6379",
+					"interval": "10s",
+					"timeout": "5s"
+		        }
+		    ]
+		}
+	]
+}

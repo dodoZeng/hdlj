@@ -1,0 +1,32 @@
+{
+  "services": [
+		{
+		    "id": "roisoft.db.0",
+		    "name": "roisoft.db.0",
+		    "tags": ["roisoft.db.cluster"],
+		    "address": "localhost",
+		    "port": 20000,
+		    "checks": [
+		        {
+					"tcp": "localhost:20000",
+					"interval": "10s",
+					"timeout": "5s"
+		        }
+		    ]
+		},
+		{
+		    "id": "hdlj.db.0",
+		    "name": "hdlj.db.0",
+		    "tags": ["hdlj.db.cluster"],
+		    "address": "localhost",
+		    "port": 40000,
+		    "checks": [
+		        {
+					"tcp": "localhost:40000",
+					"interval": "10s",
+					"timeout": "5s"
+		        }
+		    ]
+		}
+	]
+}

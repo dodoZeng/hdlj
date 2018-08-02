@@ -1,0 +1,81 @@
+// Copyright 2015 gRPC authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package proto;
+
+// 计数器类型
+enum CounterEnum {
+	CounterEnum_Void = 0;
+
+	Counter_Win = 1;
+	Counter_Gold_Coin = 2;
+
+	CounterEnum_Max = 10;
+}
+
+message PackGrid {
+	uint32 item_id = 1;
+	int32 total = 2;
+}
+
+message Hero {
+	uint32 hero_id = 1;
+	uint32 level = 2;
+	repeated EquipSetting equips = 3;
+}
+
+message EquipSetting {
+	uint32 sequence_id = 1;
+	bytes settings = 2;
+}
+
+message Item {
+	uint32 item_type = 1;
+	uint32 item_id = 2;
+	int32 value = 3;
+}
+
+message StoreItem {
+	Item item_info = 1;
+	bool deal = 2;
+}
+
+message DailyAwardItem {
+	Item item_info = 1;
+	bool deal = 2;
+}
+
+message GameData {
+	string nickname = 1;	// 昵称
+	repeated int32 player_properties = 2;
+	repeated PackGrid backpack = 3;
+	repeated Hero heroes = 4;
+	int64 online_last_time = 5;
+	int64 online_accumulate = 6;
+	int64 online_accumulate_cm = 7; 			// 防沉迷：在线时间累积
+	repeated StoreItem black_store_items = 8; 	// 黑市商店里的物品
+	repeated DailyAwardItem daily_award_items = 9; // 每日奖励
+	int32 icon = 10;
+}
+
+// 游戏数据
+message DbGameData {
+	fixed64 player_id = 1;
+	GameData game = 2;
+	repeated int32 counters_day = 3;		// 每日计数器
+	int64 last_save_time = 4;
+	int64 counters_last_time = 5;
+}

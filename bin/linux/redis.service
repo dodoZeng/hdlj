@@ -1,0 +1,24 @@
+[Unit]
+Description=redis.service
+After=network.target
+
+[Service]
+#User=roisoft
+#Group=roisoft
+
+Type=simple
+#EnvironmentFile=/etc/redis/redis.conf
+ExecStart=/usr/local/bin/redis-server /etc/redis.conf
+ExecReload=/bin/kill -TERM $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=5
+PIDFile=/var/run/redis.service.pid
+#PrivateTmp=true
+
+LimitCORE=infinity
+LimitNOFILE=102400
+LimitNPROC=102400
+
+[Install]
+WantedBy=multi-user.target

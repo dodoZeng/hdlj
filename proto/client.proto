@@ -1,0 +1,358 @@
+// Copyright 2015 gRPC authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+import "common.proto";
+import "db_hdlj.proto";
+import "db_roisoft_acct.proto";
+
+package proto;
+
+// 房间类型
+enum RoomType {
+	RoomType_Void = 0;
+	
+	MapName_5v5_1 = 1;	// 1玩家
+	MapName_5v5_2 = 2;	// 2玩家
+	MapName_5v5_3 = 3;	// 5玩家
+	MapName_5v5_4 = 4;	// 10玩家
+
+	RoomType_Max = 5;
+}
+
+// 账号类型
+enum AccountType {
+	AccountType_Void = 0;
+
+	Session = 1;
+	Guest = 2;
+	Roisoft = 3;
+	Invited = 4;
+	Email = 5;
+	Mobile = 6;
+}
+
+// 玩家属性ID
+enum PropertyId {
+	PropertyId_Void = 0;
+
+	id_gold_coin = 1;		// 金币
+	id_soul_coin = 2;		// 魂币
+	id_player_level = 3;	// 玩家等级
+	id_player_exp = 4;		// 玩家经验
+	id_score = 5;			// 得分
+	id_arena_ticket = 6;	// 竞技场入场券
+	id_equip = 7;			// 装备
+	id_item = 8;			// 道具
+	id_role_level = 9;		// 角色等级
+	id_role = 10;			// 角色
+	
+	PropertyId_Max = 30;
+}
+
+// 稀有度
+enum Rarity {
+	Initial = 0;   // 初始
+	Normal = 1;    // 普通
+	Advance = 2;   // 高级
+	Rare = 3;      // 稀有
+	Legend = 4;    // 传说
+	
+	Rarity_Max = 5;
+}
+
+// Item类别
+enum ItemTypeEnum {
+	ItemTypeEnum_Void = 0;
+
+	ItemType_Equip = 1;		// 装备
+	ItemType_Treasure = 2;	// 宝箱
+	ItemType_Hero = 3;		// 英雄
+	ItemType_Property = 4;	// 属性
+}
+
+// 游戏结果
+enum PlayerResultEnum {
+	PlayerResultEnum_Void = 0;
+
+	Win = 1;
+	Lose = 2;
+}
+
+// 大厅操作
+enum HallOperationEnum {
+	HallOperationEnum_Void = 0;
+
+	Black_Store_Buy_Equip = 1;
+	Normal_Store_Buy_Item = 2;
+	Normal_Store_Buy_Hero = 3;
+	Normal_Store_Buy_Equip = 4;
+	Open_TreasureBox = 5;
+	Recycle_Item = 6;
+	Use_Item = 7;
+	Get_DailyAward = 8;
+	
+	HallOperationEnum__Max = 9;
+}
+	
+enum CS_MessageId {
+	CS_MessageId_Void = 0;
+	
+	// 客户端和账号服务器之间的消息
+	C2S_Signup_AccountServer = 1000;	// 向账号服务器注册
+	C2S_Signin_AccountServer = 1001;	// 向账号服务器登录
+	
+	// 客户端和游戏服务器之间的消息
+	C2S_HeartBeat = 2000;				// 向服务器发送心跳
+	C2S_Signin_GameServer = 2001;		// 向游戏服务器登录
+    C2S_Start_PlayerMatching = 2002;	// 玩家已经准备就绪，通知服务器开始匹配玩家
+    C2S_Cancel_PlayerMatching = 2003;	// 撤销玩家匹配(只有在匹配中，才能申请撤销匹配，若房间已经建立，不能取消匹配)
+    C2S_Exit_Room = 2004;				// 客户端退出房间
+    C2S_Sync_PlayerOperation = 2005;	// 同步当前玩家操作给服务器
+    C2S_Get_Frames = 2006;				// 查询帧
+    C2S_Sync_Gameover = 2007;			// 同步游戏结束状态给服务器
+    C2S_Sync_LoadingProgress = 2008;	// 客户端同步场景加载进度条信息
+    C2S_Get_ServerTimestamp = 2009; 	// 客户端获取服务器当前时间
+    C2S_Synchronize_Time_Request = 2010;// 对时
+    C2S_Modify_Nickname_Request = 2011; // 修改玩家昵称
+    C2S_Sync_StatusCheckResult = 2012; 	// 同步状态检测结果
+	C2S_Hall_Operation_Request = 2013;	// 大厅操作
+	C2S_Set_RoleSettings_Request = 2014;// 保存角色装备
+	C2S_Rangking_Request = 2015;		// 获取排行
+	
+	
+	
+	S2C_Signin_GameServer_Reply = 2501;		// 向游戏服务器登录的结果
+	S2C_Start_PlayerMatching_Reply = 2502;	// 开始匹配的结果
+	S2C_Create_Room = 2503;		// 房间信息
+	S2C_Destroy_Room = 2504;	// 销毁房间
+	S2C_Exit_Room_Reply = 2505;	// 退出房间结果
+	S2C_Start_Game = 2506;		// 游戏开始
+	S2C_Sync_GameOver = 2507;	// 游戏结束
+	S2C_Sync_Frame = 2508;		// 切帧
+    S2C_Sync_LoadingProgress = 2509;		// 游戏服务器通知客户端，场景加载进度条信息
+    S2C_Get_ServerTimestamp_Reply = 2510; 	// 游戏服务器返回当前时间
+    S2C_Synchronize_Time_Reply = 2511; 		// 游戏服务器响应请求对时
+	S2C_Sync_Player_GameData = 2512;		// 服务器同步玩家的游戏数据
+	S2C_Modify_Nickname_Reply = 2513;		// 修改玩家昵称的结果
+    S2C_Cancel_PlayerMatching_Reply = 2514;	// 撤销玩家匹配结果
+    S2C_Sync_PlayerMatching_Total = 2515;	// 同步匹配的人数
+	S2C_Hall_Operation_Reply = 2516;		// 大厅操作响应
+	S2C_Set_RoleSettings_Reply = 2517;		// 保存角色装备响应
+	S2C_Rangking_Reply = 2518;				// 排行
+	S2C_Pushing_Message = 2519;				// 服务器推送的消息
+	
+	// 客户端通过服务器同步数据给其他客户端	
+	C2C_Unicast = 3001;				// 让游戏服务器转发消息给某个客户端（废弃）
+	C2C_Multicast = 3002;			// 让游戏服务器转发消息给多个客户端
+	C2C_Broadcast_All = 3003;		// 让游戏服务器转发消息给所有客户端
+	C2C_Broadcast_All_ExSelf = 3004;// 让游戏服务器转发消息给所有客户端（除了自己）
+	C2C_Broadcast_Room = 3005;		// 让游戏服务器转发消息给房间里所有客户端
+	C2C_Broadcast_Room_ExSelf = 3006;// 让游戏服务器转发消息给房间里所有客户端（除了自己）
+}
+
+// 服务器推送消息
+message PushingMessage {
+	string text = 1;
+	uint32 msg_type = 2;
+	int64 time_stamp = 3;
+}
+
+// 开启房间匹配
+message PlayerMatchingRequest {
+	uint32 client_version = 1;	// 当前客户端版本号
+	uint32 room_type = 2;		// 房间类型
+	uint32 game_mode = 3;		// 游戏模式
+}
+
+// 玩家信息
+message Player {
+	fixed64 player_id = 1;	// 当前玩家ID
+	string nickname = 2;	// 昵称
+	uint32 random_seed = 3; // 初始随机种子
+	int32 exp = 4; 			// 经验值
+	int32 icon = 5;			// 头像
+}
+
+message GameInfo {
+	fixed64 game_start_time = 1;	// 游戏开始时间
+}
+
+// 房间信息
+message Room {
+	int32 room_id = 1;
+	repeated Player players = 2;
+	int32 game_frame_num_per_second = 3;
+	int32 random_seed = 4;
+}
+
+// 玩家状态
+message PlayerState {	
+	fixed64 player_id = 1;	// 玩家ID
+	uint32 percent = 2;		// 加载进度百分数
+	int32 role_id = 3;		// 角色ID
+	int32 team_id = 4;		// 队伍ID
+}
+
+// 游戏指令
+message GameCommand {
+	bytes data = 1;
+}
+
+// 帧指令
+message FrameCommand {
+	uint32 frame_id = 1;		// 当前帧ID	
+	GameCommand commands = 2;	// 指令集
+	sfixed64 time_send = 3;		// for debug，客户端发送数据的时间
+	sfixed64 time_recv = 4;		// for debug，服务器接收到数据的时间
+}
+
+// 玩家指令
+message PlayerCommand {
+	fixed64 player_id = 1;		// 当前玩家ID
+	GameCommand commands = 2;	// 指令集
+}
+
+// 帧数据
+message GameFrame {
+	uint32 frame_id = 1;					// 当前帧ID
+	repeated PlayerCommand commands = 2;	// 指令集
+	uint32 frame_id_from = 3;				// 从哪一帧到当前帧
+}
+
+// 获取某个范围帧请求
+message FrameRequest {
+	uint32 frame_id_from = 1;			// 开始帧ID
+	uint32 frame_id_to = 2;				// 结束帧ID
+}
+
+// 游戏结束数据
+message PlayerResult {
+	fixed64 player_id = 1;				// 当前玩家ID
+	int32 result = 2;     				// 游戏结果
+	repeated PropertyItem returns = 3;
+}
+message GameResult {
+	repeated PlayerResult results = 1;
+}
+
+// 人数
+message PlayerMatchingTotal {
+	int32 total = 1;     // 当前匹配人数
+}
+
+// 状态同步检测结果
+message StatusCheckResult {
+	uint32 frame_id = 1;			// 帧ID
+	repeated fixed64 players = 2;	// 状态不同步玩家ID列表
+}
+
+// 获得东西
+message PropertyItem {
+	uint32 property_id = 1;
+	int32 property_value = 2;  //item_id/gold_coin/hun_coin/Exp
+}
+
+// 大厅操作
+message HallOperationRequest {
+	uint32 operation_id = 1;	// 操作ID
+	int32 operation_param1 = 2;	// 操作参数
+	int32 operation_param2 = 3;	// 操作参数
+	int32 operation_param3 = 4;	// 操作参数
+}
+message HallOperationReply {
+	ErrorInfo result = 1;
+	repeated PropertyItem returns = 2;
+}
+
+// 保存装备
+message SetRoleSetting {
+	uint32 role_id = 1;			// 角色ID
+	EquipSetting setting = 2;	// 装备设置
+}
+
+// 排行
+message RankingList {
+	repeated Player players = 1;
+}
+
+//登录：
+//Guest:账号+PlayerId/token
+//Session:Sid+PlayerId
+//email,mobile,roisoft:账号+密码（密码错误2次，要求输入token）
+//注册：
+//Guest:用“账号+token”登录，会自动注册
+//email,mobile,roisoft:账号+密码+token
+
+// 登录信息
+message SigninRequest {
+	int32 account_type = 1; // 账号类型
+	string account = 2;		// 玩家账号
+	string password = 3;	// 玩家密码
+	string attach_code = 4; // 图形码、短信数字验证码，因账号类型不同（在输入密码错误登录后，需要使用attach_code登录）
+	fixed64 player_id = 5;	// 玩家ID（通过Session登录时，必填；另外，通过Guest方式非首次登录，请提供playerid，如果没有，可以提供attach_code）
+	string session_id = 6;	// 会话ID（通过Session登录时，必填）
+	bool reallocate_agent = 7; // 是否需要重新分配agent服务器
+}
+// 登录结果
+message SigninReply {
+	ErrorInfo result = 1;
+	fixed64 player_id = 2;	// 玩家ID
+	string session_id = 3;	// 会话ID（上次登录成功后得到）
+	string agent_id = 4;	// 接入服务器ID
+	string agent_addr = 5;	// 接入服务器地址
+}
+
+// 注册账号
+message SignupRequest {
+	int32 account_type = 1; // 账号类型
+	string account = 2;		// 玩家账号
+	string password = 3;	// 玩家密码
+	string attach_code = 4; // 图形码、短信数字验证码，因账号类型不同
+	string guest_account = 5;// 游客账号（游客账号转正式时，必填）
+	fixed64 player_id = 6;	 // 玩家ID（游客账号转正式时，必填）
+}
+
+// 附加码请求
+message AttachCodeRequest {
+	int32 account_type = 1; // 账号类型
+}
+
+// 检查身份证请求
+message CheckIdCardRequest {
+	SessionInfo session = 1;// 会话信息
+	IDCardInfo id_card = 2; // 身份证信息
+}
+
+
+// 账号服务器提供的服务
+service AccountService {
+  rpc Signin (SigninRequest) returns (SigninReply) {}
+  rpc Signup (SignupRequest) returns (ErrorInfo) {}
+  rpc GetGameServerList (SessionInfo) returns (GameServerList) {}
+  rpc GetAccountData (SessionInfo) returns (AccountData) {}
+  rpc CheckIDCard (CheckIdCardRequest) returns (ErrorInfo) {}
+}
+
+message SyncRole {
+	fixed64 player_id = 1;
+	uint32 hero_id = 2;
+	repeated uint32 equip_ids = 3;
+}
+
+message ForwardBody {
+	repeated fixed64 players = 1;
+	bytes body = 2;
+}

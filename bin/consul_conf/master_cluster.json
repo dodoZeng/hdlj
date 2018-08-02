@@ -1,0 +1,33 @@
+{
+  "services":
+	[
+		{
+		    "id": "roisoft.master",
+		    "name": "roisoft.master",
+		    "tags": ["roisoft.master"],
+		    "address": "localhost",
+		    "port": 10000,
+		    "checks": [
+		        {
+					"tcp": "localhost:10000",
+					"interval": "10s",
+					"timeout": "5s"
+		        }
+		    ]
+		},
+		{
+		    "id": "hdlj.master.test",
+		    "name": "hdlj.master.test",
+		    "tags": ["hdlj.master.cluster"],
+		    "address": "localhost",
+		    "port": 50000,
+		    "checks": [
+		        {
+					"tcp": "localhost:50000",
+					"interval": "10s",
+					"timeout": "5s"
+		        }
+		    ]
+		}
+	]
+}

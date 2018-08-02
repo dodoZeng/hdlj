@@ -1,0 +1,20 @@
+[Unit]
+Description=consul.service
+After=network.target
+
+[Service]
+User=roisoft
+Group=roisoft
+
+Type=simple
+#EnvironmentFile=/usr/local/bin/hdlj/consul_conf
+ExecStart=/usr/local/bin/consul agent -dev -config-dir /usr/local/bin/hdlj/consul_conf -bind=127.0.0.1
+ExecReload=/bin/kill -TERM $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=5
+PIDFile=/var/run/consul.service.pid
+#PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
